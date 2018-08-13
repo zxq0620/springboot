@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+    <script th:src="@{/static/js/jquery.min.js}"></script>
+    <script th:src="@{/static/js/bootstrap.min.js}"></script>
+    <title>网盘资源分享站</title>
+    <style>
+        #searchdiv{
+            width:700px;
+            padding-left: 100px;
+            padding-top: 100px;
+        }
+        #content{
+            width:500px;
+            float: left;
+            padding-right: 40px;
+            padding-left: 100px;
+            padding-top: 100px;
+        }
+        #rightside{
+            width:500px;
+            float: right;
+            padding-right: 40px;
+        }
+        #bg{
+            position:fixed;
+            width:100%;
+            height:100%;
+            z-Index:-1;
+        }
+    </style>
+</head>
+<body>
+<img id='bg' th:src='@{/static/img/bj.jpg}'/>
+<div>
+    <div>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a th:href="@{/}" class="glyphicon glyphicon-home">首页</a></li>
+                        <!--<li class="active"><a>分享区</a></li>-->
+                        <li><a>讨论区</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a class="glyphicon glyphicon-user">个人中心</a> </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<div id="searchdiv">
+    <input id="key" style="width: 650px"><a id="search" onclick="searchByKeyWord()" class="glyphicon glyphicon-search" style="color: #34ebff">搜索</a>
+    <span style="background: red">热门搜索：</span>
+</div>
+
+<div id="content">
+    <div th:each="link:${links}" class="panel panel-default" style="width: 650px">
+        <div class="panel-body" style="width: 650px">
+            <table>
+                <tbody>
+                <tr>
+                    <td><a th:href="${link.getLink()}" th:text="${link.getName()}" target="_blank"></a></td>
+                </tr>
+                <tr>
+                    <td><span>提取密码：</span></td>
+                    <td><span th:text="${link.getCode()}"></span> </td>
+                </tr>
+                <tr>
+                    <td><span>类型：</span></td>
+                    <td><a th:id="${link.getType()}" th:text="${link.getType()}" onclick="searchByType()"></a></td>
+                </tr>
+                <tr>
+                    <td><span>更新时间：</span></td>
+                    <td><span th:text="${link.getUpdateTime()}"></span></td>
+                </tr>
+                <tr>
+                    <td><span>分享人：</span></td>
+                    <td><span th:text="${link.getUser().getUsername()}"></span></td>
+                </tr>
+                <tr>
+                    <td><span>描述：</span></td>
+                    <td><span th:text="${link.getAboutLink()}"></span></td>
+                </tr>
+                <tr>
+                    <td><span>链接已挂？</span></td>
+                    <td><a>提醒补链接</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="pagediv">
+        <ul th:switch="${prepage}" class="pagination">
+            <li th:case="0"><a class="disabled">&laquo;</a></li>
+            <li th:case="*"><a th:href="@{/links/search/bykeyword(keyword=${keyword},pagenum=${prepage})}">&laquo;</a></li>
+        </ul>
+        <ul th:each="i:${#numbers.sequence(1,total/10+1)}" class="pagination">
+            <li th:if="${i}==${nowpage}"><a th:text="${i}" style="background: #5bc0de"></a></li>
+            <li th:if="${i}!=${nowpage}"><a th:href="@{/links/search/bykeyword(keyword=${keyword},pagenum=${i})}" th:text="${i}"></a></li>
+        </ul>
+        <ul th:switch="${nextpage}" class="pagination">
+            <li th:case="0"><a class="disabled">&raquo;</a></li>
+            <li th:case="*"><a th:href="@{/links/search/bykeyword(keyword=${keyword},pagenum=${nextpage})}">&raquo;</a></li>
+        </ul>
+    </div>
+</div>
+
+<div id="rightside">
+    <span>分类：</span>
+</div>
+
+<nav class="footer navbar-fixed-bottom">
+    <div class="container" style="text-align:center">
+        &copy;本站仅用于学习交流，github地址：
+    </div>
+</nav>
+
+<script th:src="@{/static/js/search.js}" th:inline="javascript"></script>
+</body>
+</html>

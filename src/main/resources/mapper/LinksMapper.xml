@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.howtochange.springboot.dao.LinksMapper" >
+  <resultMap id="BaseResultMap" type="com.howtochange.springboot.pojo.Links" >
+    <result column="pk" property="pk" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="link" property="link" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="user_pk" property="userPk" jdbcType="INTEGER" />
+    <result column="about_link" property="aboutLink" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+      <association property="user" column="user_pk" javaType="com.howtochange.springboot.pojo.User">
+          <id column="pk" property="pk"/>
+          <result column="username" property="username"/>
+      </association>
+  </resultMap>
+  <insert id="insert" parameterType="com.howtochange.springboot.pojo.Links" >
+    insert into links (pk, name, type, 
+      link, code, user_pk, 
+      about_link, create_time, update_time
+      )
+    values (#{pk,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{link,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{userPk,jdbcType=INTEGER}, 
+      #{aboutLink,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.howtochange.springboot.pojo.Links" >
+    insert into links
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pk != null" >
+        pk,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="link != null" >
+        link,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="userPk != null" >
+        user_pk,
+      </if>
+      <if test="aboutLink != null" >
+        about_link,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pk != null" >
+        #{pk,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userPk != null" >
+        #{userPk,jdbcType=INTEGER},
+      </if>
+      <if test="aboutLink != null" >
+        #{aboutLink,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+    <select id="selectByKeyWord" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select l.pk,l.name,l.type,l.link,l.code,l.about_link,l.update_time,u.username,u.pk
+        from links l inner join share_user u
+        where l.user_pk=u.pk and concat_ws(',',name,type,about_link) like ${key}
+    </select>
+    <select id="selectByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select name,type,link,code,about_link,update_time
+        from links
+        where type = #{type}
+    </select>
+</mapper>

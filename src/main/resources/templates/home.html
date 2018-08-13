@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+    <script th:src="@{/static/js/jquery.min.js}"></script>
+    <script th:src="@{/static/js/bootstrap.min.js}"></script>
+    <title>网盘资源分享站</title>
+    <style>
+        #bg{
+            position:fixed;
+            width:100%;
+            height:100%;
+            z-Index:-1;
+        }
+        #searchdiv{
+             width:500px;
+             margin: 300px auto;
+        }
+    </style>
+</head>
+<body>
+<img id='bg' th:src='@{/static/img/bj.jpg}'/>
+<div>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a class="glyphicon glyphicon-home">首页</a></li>
+                    <!--<li><a href="/searchlinks?keyword=">分享区</a></li>-->
+                    <li><a>讨论区</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li sec:authorize="!isAuthenticated()"><a class="glyphicon glyphicon-registration-mark">注册</a> </li>
+                    <!--<li sec:authorize="principal.authorities"></li>-->
+                </ul>
+                <ul class="nav pull-right">
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/login}" class="glyphicon glyphicon-user">个人中心</a> </li>
+                    <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="glyphicon glyphicon-log-in">登陆</a> </li>
+                    <!--<li><span sec:authentication="principal.authorities"></span></li>-->
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div id="searchdiv">
+    <input id="key" style="width: 450px"><a id="search" onclick="searchByKeyWord()" class="glyphicon glyphicon-search" style="color: #2aabd2">搜索</a>
+    <span style="background: red">热门搜索：</span>
+</div>
+
+<script th:src="@{/static/js/search.js}"></script>
+</body>
+</html>
